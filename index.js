@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 
-// .env file configuration
+// Setting up Environment variables
 const dotenv = require("dotenv");
 dotenv.config();
 
-// routers
+// Routers
 const authRouter = require("./routes/authRouter");
 const userRouter = require("./routes/userRouter");
 const postRouter = require("./routes/postRouter");
@@ -15,8 +15,8 @@ const postRouter = require("./routes/postRouter");
 // DB Configuration
 mongoose
   .connect(process.env.DB_URL, {
-    useNewUrlParser: true,        
-    useUnifiedTopology: true,     
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
   .then(console.log(`DB GOT CONNECTED`))
   .catch((error) => {
@@ -25,15 +25,15 @@ mongoose
     process.exit(1);
   });
 
-// declaring app
+// Declaring the app
 const app = express();
 
-// middlewares
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/images", express.static(path.join(__dirname, "/images")));
 
-// for file upload
+// For File Upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
@@ -43,17 +43,17 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 app.post("/api/upload", upload.single("file"), (req, res) => {
   res.status(200).json("File has been uploaded");
 });
 
-// routes
+// Routes
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/post", postRouter);
 
-// starting the server
+// Starting the Server
 app.listen("5000", () => {
   console.log("App running on port 5000");
 });
