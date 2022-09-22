@@ -12,14 +12,20 @@ exports.getOne = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     let posts;
-    if(req.query && req.query.search)
-    {
-      let search = req.query.search;
-      posts = await Post.find({title: new RegExp(search, "i")});
-    }
-    else
-      posts = await Post.find();
+    if (req.query && req.query.search)
+      posts = await Post.find({ title: new RegExp(req.query.search, "i") });
+    else posts = await Post.find();
     res.status(200).send(posts);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+
+exports.createPost = async (req, res) => {
+  try {
+    const newPost = await Post.create(req.body);
+    res.status(200).json(newPost);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -66,15 +72,6 @@ exports.deletePost = async (req, res) => {
     } catch (error) {
       res.status(500).json(error);
     }
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
-
-exports.createPost = async (req, res) => {
-  try {
-    const newPost = await Post.create(req.body);
-    res.status(200).json(newPost);
   } catch (error) {
     res.status(500).json(error);
   }

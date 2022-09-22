@@ -13,7 +13,6 @@ exports.register = async (req, res) => {
       email,
       password: hashedPass,
     });
-    console.log(newUser);
     res.status(200).json(newUser);
   } catch (error) {
     console.log(error);
